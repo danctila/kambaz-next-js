@@ -88,31 +88,39 @@ export default function Lab1() {
           <li>Flip and cook the other side.</li>
           <li>Serve and enjoy!</li>
         </ol>
-        My favorite recipe:
+        My favorite recipe (chicken parmesan):
         <ol id="wd-your-favorite-recipe">
-          <li>Preheat oven to 350°F.</li>
-          <li>Mix flour, sugar, and cocoa powder in a bowl.</li>
-          <li>Add eggs, milk, and melted butter.</li>
-          <li>Pour into greased baking pan.</li>
-          <li>Bake for 25-30 minutes until toothpick comes out clean.</li>
-          <li>Let cool and enjoy your chocolate brownies!</li>
+          <li>Preheat oven to 425°F.</li>
+          <li>Pound chicken breasts to even thickness.</li>
+          <li>
+            Set up breading station with flour, beaten eggs, and breadcrumbs.
+          </li>
+          <li>Dredge chicken in flour, then egg, then breadcrumbs.</li>
+          <li>Heat oil in a large skillet over medium-high heat.</li>
+          <li>Pan-fry chicken until golden brown on both sides.</li>
+          <li>
+            Transfer chicken to baking dish and top with marinara sauce and
+            mozzarella cheese.
+          </li>
+          <li>
+            Bake for 15-20 minutes until cheese is melted and chicken is cooked
+            through.
+          </li>
         </ol>
         <h5>Unordered List Tag</h5>
         My favorite books (in no particular order)
         <ul id="wd-my-books">
           <li>Dune</li>
           <li>Lord of the Rings</li>
-          <li>Ender's Game</li>
+          <li>Ender&apos;s Game</li>
           <li>Red Mars</li>
           <li>The Forever War</li>
         </ul>
         Your favorite books (in no particular order)
         <ul id="wd-your-books">
-          <li>The Hitchhiker's Guide to the Galaxy</li>
-          <li>Foundation</li>
-          <li>Neuromancer</li>
-          <li>The Martian</li>
-          <li>Ready Player One</li>
+          <li>The Great Gatsby</li>
+          <li>To Kill a Mockingbird</li>
+          <li>1984</li>
         </ul>
       </div>
 
@@ -209,10 +217,9 @@ export default function Lab1() {
         <br />
         Loading a local image:
         <br />
-        {/* Tesla Bot image - you should download and save as teslabot.jpg in public/images/ */}
         <img
           id="wd-teslabot"
-          src="https://cdn.vox-cdn.com/thumbor/j-YKKYrLr4MaJYQ1i9RLfuGHR5Y=/0x0:2040x1360/1200x800/filters:focal(857x517:1183x843)/cdn.vox-cdn.com/uploads/chorus_image/image/69805683/Tesla_Bot.0.jpg"
+          src="/images/teslabot.jpg"
           height="200px"
           alt="Tesla Bot"
         />

@@ -1,23 +1,37 @@
 "use client";
 
+import Link from "next/link";
+
 export default function Lab1() {
   return (
     <div id="wd-lab1">
-      <h2>Lab 1</h2>
-      <h3>Student: [Your Full Name] - Section: [Your Section]</h3>
-      <p>
-        <strong>Links to Lab Assignments:</strong>
-        <br />
-        <a href="/Labs/Lab1">Lab 1: HTML Examples</a> |
-        <a href="/Labs/Lab2">Lab 2: CSS Basics</a> |
-        <a href="/Labs/Lab3">Lab 3: JavaScript Fundamentals</a>
-        <br />
-        <a href="/">Link to Kambaz Application</a>
-        <br />
-        <a href="https://github.com/yourusername/kambaz-next-js" id="wd-github">
-          GitHub Repository
-        </a>
-      </p>
+      <div id="wd-labs">
+        <h1>Labs</h1>
+        <h3>Dylan Anctil - Fridays @ 3:00pm EST Async Section</h3>
+        <h3>
+          GitHub Repository:{" "}
+          <a href="https://github.com/danctila/kambaz-next-js" id="wd-github">
+            https://github.com/danctila/kambaz-next-js
+          </a>
+        </h3>
+        <ul>
+          <li>
+            <Link href="/Labs/Lab1" id="wd-lab1-link">
+              Lab 1: HTML Examples
+            </Link>
+          </li>
+          <li>
+            <Link href="/Labs/Lab2" id="wd-lab2-link">
+              Lab 2: CSS Basics
+            </Link>
+          </li>
+          <li>
+            <Link href="/Labs/Lab3" id="wd-lab3-link">
+              Lab 3: JavaScript Fundamentals
+            </Link>
+          </li>
+        </ul>
+      </div>
       <hr />
       <h3>HTML Examples</h3>
       <div id="wd-h-tag">
@@ -348,7 +362,7 @@ export default function Lab1() {
         <br />
         Link to my GitHub repository:
         <a
-          href="https://github.com/yourusername/kambaz-next-js"
+          href="https://github.com/[YOUR_USERNAME]/kambaz-next-js"
           id="wd-github-anchor"
         >
           My GitHub Repository

@@ -4,6 +4,13 @@ export default function Labs() {
   return (
     <div id="wd-labs">
       <h1>Labs</h1>
+      <h3>Dylan Anctil - Fridays @ 3:00pm EST Async Section</h3>
+      <h3>
+        GitHub Repository:{" "}
+        <a href="https://github.com/danctila/kambaz-next-js" id="wd-github">
+          https://github.com/danctila/kambaz-next-js
+        </a>
+      </h3>
       <ul>
         <li>
           <Link href="/Labs/Lab1" id="wd-lab1-link">

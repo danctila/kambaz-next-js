@@ -1,5 +1,6 @@
 "use client";
 
+import { useParams } from "next/navigation";
 import Link from "next/link";
 import { Button, Form, ListGroup, ListGroupItem } from "react-bootstrap";
 import { BsGripVertical, BsPlus } from "react-icons/bs";
@@ -7,8 +8,11 @@ import { IoEllipsisVertical } from "react-icons/io5";
 import { FaPlus } from "react-icons/fa6";
 import { FaSearch, FaCheckCircle } from "react-icons/fa";
 import { MdEdit } from "react-icons/md";
+import * as db from "../../../Database";
 
 export default function Assignments() {
+  const { cid } = useParams();
+  const assignments = db.assignments;
   return (
     <div id="wd-assignments">
       <div className="d-flex justify-content-between align-items-center mb-4">
@@ -45,69 +49,57 @@ export default function Assignments() {
             </div>
           </div>
           <ListGroup className="rounded-0">
-            <ListGroupItem className="wd-lesson p-3 ps-1">
-              <div className="d-flex justify-content-between align-items-center">
-                <div className="d-flex align-items-center">
-                  <BsGripVertical className="me-2 fs-3" />
-                  <MdEdit className="me-3 fs-3 text-success" />
-                  <div>
-                    <Link href="/Courses/1234/Assignments/123" className="wd-assignment-link text-dark fw-bold text-decoration-none">
-                      A1
-                    </Link>
-                    <div className="text-muted small">
-                      <span className="text-danger">Multiple Modules</span> | <strong>Not available until</strong> May 6 at 12:00am |{" "}
-                      <strong>Due</strong> May 13 at 11:59pm | 100 pts
+            {assignments
+              .filter((assignment: any) => assignment.course === cid)
+              .map((assignment: any) => (
+                <ListGroupItem key={assignment._id} className="wd-lesson p-3 ps-1">
+                  <div className="d-flex justify-content-between align-items-center">
+                    <div className="d-flex align-items-center">
+                      <BsGripVertical className="me-2 fs-3" />
+                      <Link href={`/Courses/${cid}/Assignments/${assignment._id}`}>
+                        <MdEdit className="me-3 fs-3 text-success" style={{ cursor: "pointer" }} />
+                      </Link>
+                      <div>
+                        <Link 
+                          href={`/Courses/${cid}/Assignments/${assignment._id}`} 
+                          className="wd-assignment-link text-dark fw-bold text-decoration-none"
+                        >
+                          {assignment.title}
+                        </Link>
+                        <div className="text-muted small">
+                          <span className="text-danger">Multiple Modules</span> | <strong>Not available until</strong>{" "}
+                          {new Date(assignment.availableFrom).toLocaleDateString("en-US", {
+                            month: "short",
+                            day: "numeric",
+                          })}{" "}
+                          at{" "}
+                          {new Date(assignment.availableFrom).toLocaleTimeString("en-US", {
+                            hour: "numeric",
+                            minute: "2-digit",
+                            hour12: true,
+                          })}{" "}
+                          | <strong>Due</strong>{" "}
+                          {new Date(assignment.dueDate).toLocaleDateString("en-US", {
+                            month: "short",
+                            day: "numeric",
+                          })}{" "}
+                          at{" "}
+                          {new Date(assignment.dueDate).toLocaleTimeString("en-US", {
+                            hour: "numeric",
+                            minute: "2-digit",
+                            hour12: true,
+                          })}{" "}
+                          | {assignment.points} pts
+                        </div>
+                      </div>
+                    </div>
+                    <div>
+                      <FaCheckCircle className="text-success me-2" />
+                      <IoEllipsisVertical className="fs-4" />
                     </div>
                   </div>
-                </div>
-                <div>
-                  <FaCheckCircle className="text-success me-2" />
-                  <IoEllipsisVertical className="fs-4" />
-                </div>
-              </div>
-            </ListGroupItem>
-            <ListGroupItem className="wd-lesson p-3 ps-1">
-              <div className="d-flex justify-content-between align-items-center">
-                <div className="d-flex align-items-center">
-                  <BsGripVertical className="me-2 fs-3" />
-                  <MdEdit className="me-3 fs-3 text-success" />
-                  <div>
-                    <Link href="/Courses/1234/Assignments/124" className="wd-assignment-link text-dark fw-bold text-decoration-none">
-                      A2
-                    </Link>
-                    <div className="text-muted small">
-                      <span className="text-danger">Multiple Modules</span> | <strong>Not available until</strong> May 13 at 12:00am |{" "}
-                      <strong>Due</strong> May 20 at 11:59pm | 100 pts
-                    </div>
-                  </div>
-                </div>
-                <div>
-                  <FaCheckCircle className="text-success me-2" />
-                  <IoEllipsisVertical className="fs-4" />
-                </div>
-              </div>
-            </ListGroupItem>
-            <ListGroupItem className="wd-lesson p-3 ps-1">
-              <div className="d-flex justify-content-between align-items-center">
-                <div className="d-flex align-items-center">
-                  <BsGripVertical className="me-2 fs-3" />
-                  <MdEdit className="me-3 fs-3 text-success" />
-                  <div>
-                    <Link href="/Courses/1234/Assignments/125" className="wd-assignment-link text-dark fw-bold text-decoration-none">
-                      A3
-                    </Link>
-                    <div className="text-muted small">
-                      <span className="text-danger">Multiple Modules</span> | <strong>Not available until</strong> May 20 at 12:00am |{" "}
-                      <strong>Due</strong> May 27 at 11:59pm | 100 pts
-                    </div>
-                  </div>
-                </div>
-                <div>
-                  <FaCheckCircle className="text-success me-2" />
-                  <IoEllipsisVertical className="fs-4" />
-                </div>
-              </div>
-            </ListGroupItem>
+                </ListGroupItem>
+              ))}
           </ListGroup>
         </ListGroupItem>
       </ListGroup>

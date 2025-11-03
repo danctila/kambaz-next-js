@@ -6,6 +6,7 @@ import { Form, Button, Row, Col } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
 import { addAssignment, updateAssignment } from "../reducer";
 import { RootState } from "../../../../store";
+import { Assignment } from "../../../../types";
 
 export default function AssignmentEditor() {
   const { cid, aid } = useParams();
@@ -13,16 +14,16 @@ export default function AssignmentEditor() {
   const dispatch = useDispatch();
   const { assignments } = useSelector((state: RootState) => state.assignmentsReducer);
   
-  const existingAssignment = aid !== "new" ? assignments.find((a: any) => a._id === aid) : null;
+  const existingAssignment = aid !== "new" ? assignments.find((a: Assignment) => a._id === aid) : null;
   
-  const [assignment, setAssignment] = useState<any>({
+  const [assignment, setAssignment] = useState<Partial<Assignment>>({
     title: "",
     description: "",
     points: 100,
     dueDate: "",
     availableFrom: "",
     availableUntil: "",
-    course: cid,
+    course: Array.isArray(cid) ? cid[0] : cid,
   });
 
   useEffect(() => {

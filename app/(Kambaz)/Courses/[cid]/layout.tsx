@@ -6,11 +6,12 @@ import Breadcrumb from "./Breadcrumb";
 import { useSelector } from "react-redux";
 import { useParams } from "next/navigation";
 import { RootState } from "../../store";
+import { Course } from "../../types";
 
 export default function CoursesLayout({ children }: { children: ReactNode }) {
   const { cid } = useParams();
   const { courses } = useSelector((state: RootState) => state.coursesReducer);
-  const course = courses.find((course: any) => course._id === cid);
+  const course = courses.find((course: Course) => course._id === cid);
   const [showNav, setShowNav] = useState(true);
 
   return (

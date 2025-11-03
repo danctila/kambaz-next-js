@@ -5,9 +5,10 @@ import { useSelector, useDispatch } from "react-redux";
 import { setCurrentUser } from "../reducer";
 import { RootState } from "../../store";
 import { Button, FormControl } from "react-bootstrap";
+import { User } from "../../types";
 
 export default function Profile() {
-  const [profile, setProfile] = useState<any>({});
+  const [profile, setProfile] = useState<Partial<User>>({});
   const dispatch = useDispatch();
   const router = useRouter();
   const { currentUser } = useSelector((state: RootState) => state.accountReducer);
@@ -24,6 +25,7 @@ export default function Profile() {
   };
   useEffect(() => {
     fetchProfile();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
     <div className="wd-profile-screen" style={{ maxWidth: "500px" }}>
@@ -70,7 +72,7 @@ export default function Profile() {
           <select
             className="form-control mb-2"
             id="wd-role"
-            onChange={(e) => setProfile({ ...profile, role: e.target.value })}
+            onChange={(e) => setProfile({ ...profile, role: e.target.value as User["role"] })}
           >
             <option value="USER">User</option>
             <option value="ADMIN">Admin</option>

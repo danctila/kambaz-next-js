@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { addNewCourse, deleteCourse, updateCourse } from "../Courses/reducer";
 import { enrollInCourse, unenrollFromCourse } from "./reducer";
 import { RootState } from "../store";
+import { Course, Enrollment } from "../types";
 
 export default function Dashboard() {
   const { courses } = useSelector((state: RootState) => state.coursesReducer);
@@ -13,7 +14,7 @@ export default function Dashboard() {
   const { enrollments } = useSelector((state: RootState) => state.enrollmentsReducer);
   const dispatch = useDispatch();
   const [showAllCourses, setShowAllCourses] = useState(false);
-  const [course, setCourse] = useState<any>({
+  const [course, setCourse] = useState<Partial<Course>>({
     _id: "0",
     name: "New Course",
     number: "New Number",
@@ -25,7 +26,7 @@ export default function Dashboard() {
 
   const isEnrolled = (courseId: string) => {
     return enrollments.some(
-      (enrollment: any) =>
+      (enrollment: Enrollment) =>
         enrollment.user === currentUser?._id && enrollment.course === courseId
     );
   };
@@ -43,7 +44,7 @@ export default function Dashboard() {
     ? courses
     : courses.filter((course) =>
         enrollments.some(
-          (enrollment: any) =>
+          (enrollment: Enrollment) =>
             enrollment.user === currentUser?._id &&
             enrollment.course === course._id
         )

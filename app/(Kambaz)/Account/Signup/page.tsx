@@ -1,37 +1,81 @@
+"use client";
 import Link from "next/link";
-import { Form } from "react-bootstrap";
+import { useRouter } from "next/navigation";
+import { setCurrentUser } from "../reducer";
+import { useDispatch } from "react-redux";
+import { useState } from "react";
+import * as db from "../../Database";
+import { FormControl, Button } from "react-bootstrap";
 
 export default function Signup() {
+  const [user, setUser] = useState<any>({});
+  const dispatch = useDispatch();
+  const router = useRouter();
+  
+  const signup = () => {
+    // Basic validation
+    if (!user.username || !user.password) {
+      alert("Username and password are required");
+      return;
+    }
+    
+    // Check if username already exists
+    const existingUser = db.users.find((u: any) => u.username === user.username);
+    if (existingUser) {
+      alert("Username already exists");
+      return;
+    }
+    
+    // Create new user with default values
+    const newUser = {
+      ...user,
+      _id: new Date().getTime().toString(),
+      firstName: user.firstName || "",
+      lastName: user.lastName || "",
+      email: user.email || "",
+      dob: user.dob || "",
+      role: "STUDENT",
+    };
+    
+    // Add to database (in-memory for now)
+    db.users.push(newUser);
+    
+    // Set as current user
+    dispatch(setCurrentUser(newUser));
+    
+    // Navigate to Dashboard
+    router.push("/Dashboard");
+  };
+  
   return (
     <div id="wd-signup-screen" style={{ maxWidth: "400px" }}>
       <h3>Sign up</h3>
-      <Form.Control
+      <FormControl
         id="wd-username"
         placeholder="username"
-        defaultValue="alice"
+        onChange={(e) => setUser({ ...user, username: e.target.value })}
         className="mb-2"
       />
-      <Form.Control
+      <FormControl
         id="wd-password"
         placeholder="password"
         type="password"
-        defaultValue="123"
+        onChange={(e) => setUser({ ...user, password: e.target.value })}
         className="mb-2"
       />
-      <Form.Control
+      <FormControl
         id="wd-password-verify"
         placeholder="verify password"
         type="password"
-        defaultValue="123"
         className="mb-2"
       />
-      <Link
+      <Button
         id="wd-signup-btn"
-        href="/Account/Profile"
-        className="btn btn-primary w-100 mb-2"
+        onClick={signup}
+        className="w-100 mb-2"
       >
         Sign up
-      </Link>
+      </Button>
       <Link id="wd-signin-link" href="/Account/Signin">
         Sign in
       </Link>

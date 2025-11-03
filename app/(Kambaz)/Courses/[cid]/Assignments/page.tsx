@@ -1,18 +1,38 @@
 "use client";
 
-import { useParams } from "next/navigation";
+import { useState } from "react";
+import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
-import { Button, Form, ListGroup, ListGroupItem } from "react-bootstrap";
+import { Button, Form, ListGroup, ListGroupItem, Modal } from "react-bootstrap";
 import { BsGripVertical, BsPlus } from "react-icons/bs";
 import { IoEllipsisVertical } from "react-icons/io5";
-import { FaPlus } from "react-icons/fa6";
+import { FaPlus, FaTrash } from "react-icons/fa6";
 import { FaSearch, FaCheckCircle } from "react-icons/fa";
 import { MdEdit } from "react-icons/md";
-import * as db from "../../../Database";
+import { useSelector, useDispatch } from "react-redux";
+import { deleteAssignment } from "./reducer";
+import { RootState } from "../../../store";
 
 export default function Assignments() {
   const { cid } = useParams();
-  const assignments = db.assignments;
+  const router = useRouter();
+  const dispatch = useDispatch();
+  const { assignments } = useSelector((state: RootState) => state.assignmentsReducer);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [assignmentToDelete, setAssignmentToDelete] = useState<string | null>(null);
+
+  const handleDeleteClick = (assignmentId: string) => {
+    setAssignmentToDelete(assignmentId);
+    setShowDeleteDialog(true);
+  };
+
+  const confirmDelete = () => {
+    if (assignmentToDelete) {
+      dispatch(deleteAssignment(assignmentToDelete));
+    }
+    setShowDeleteDialog(false);
+    setAssignmentToDelete(null);
+  };
   return (
     <div id="wd-assignments">
       <div className="d-flex justify-content-between align-items-center mb-4">
@@ -29,7 +49,11 @@ export default function Assignments() {
           <Button variant="secondary" className="me-2" id="wd-add-assignment-group">
             <FaPlus className="me-1" /> Group
           </Button>
-          <Button variant="danger" id="wd-add-assignment">
+          <Button
+            variant="danger"
+            id="wd-add-assignment"
+            onClick={() => router.push(`/Courses/${cid}/Assignments/new`)}
+          >
             <FaPlus className="me-1" /> Assignment
           </Button>
         </div>
@@ -94,6 +118,11 @@ export default function Assignments() {
                       </div>
                     </div>
                     <div>
+                      <FaTrash
+                        className="text-danger me-3"
+                        style={{ cursor: "pointer" }}
+                        onClick={() => handleDeleteClick(assignment._id)}
+                      />
                       <FaCheckCircle className="text-success me-2" />
                       <IoEllipsisVertical className="fs-4" />
                     </div>
@@ -103,6 +132,21 @@ export default function Assignments() {
           </ListGroup>
         </ListGroupItem>
       </ListGroup>
+
+      <Modal show={showDeleteDialog} onHide={() => setShowDeleteDialog(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Delete Assignment</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>Are you sure you want to remove this assignment?</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowDeleteDialog(false)}>
+            Cancel
+          </Button>
+          <Button variant="danger" onClick={confirmDelete}>
+            Delete
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 }

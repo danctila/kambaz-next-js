@@ -6,30 +6,34 @@ import { useDispatch } from "react-redux";
 import { useState } from "react";
 import * as client from "../client";
 import { FormControl, Button } from "react-bootstrap";
-import { User } from "../../types";
 
 export default function Signin() {
-  const [credentials, setCredentials] = useState<Partial<User>>({});
+  const [credentials, setCredentials] = useState({ username: "", password: "" });
   const dispatch = useDispatch();
   const router = useRouter();
   const signin = async () => {
-    const user = await client.signin(credentials);
-    if (!user) return;
-    dispatch(setCurrentUser(user));
-    router.push("/Dashboard");
+    try {
+      const user = await client.signin(credentials);
+      if (!user) return;
+      dispatch(setCurrentUser(user));
+      router.push("/Dashboard");
+    } catch (error: unknown) {
+      console.error("Signin failed:", error);
+      alert("Invalid username or password");
+    }
   };
   return (
     <div id="wd-signin-screen" style={{ maxWidth: "400px" }}>
       <h3>Sign in</h3>
       <FormControl
-        defaultValue={credentials.username}
+        value={credentials.username}
         onChange={(e) => setCredentials({ ...credentials, username: e.target.value })}
         className="mb-2"
         placeholder="username"
         id="wd-username"
       />
       <FormControl
-        defaultValue={credentials.password}
+        value={credentials.password}
         onChange={(e) => setCredentials({ ...credentials, password: e.target.value })}
         className="mb-2"
         placeholder="password"

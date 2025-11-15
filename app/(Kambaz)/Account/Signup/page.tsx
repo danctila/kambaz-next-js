@@ -18,8 +18,16 @@ export default function Signup() {
       const currentUser = await client.signup(user);
       dispatch(setCurrentUser(currentUser));
       router.push("/Dashboard");
-    } catch (error: any) {
-      alert(error.response?.data?.message || "Signup failed");
+    } catch (error: unknown) {
+      if (error && typeof error === 'object' && 'response' in error && 
+          typeof error.response === 'object' && error.response && 
+          'data' in error.response && typeof error.response.data === 'object' && 
+          error.response.data && 'message' in error.response.data && 
+          typeof error.response.data.message === 'string') {
+        alert(error.response.data.message);
+      } else {
+        alert("Signup failed");
+      }
     }
   };
   

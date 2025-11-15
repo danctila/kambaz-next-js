@@ -22,7 +22,8 @@ export default function Profile() {
   };
 
   const updateProfile = async () => {
-    const updatedProfile = await client.updateUser(profile);
+    if (!profile._id) return;
+    const updatedProfile = await client.updateUser(profile as { _id: string } & Record<string, unknown>);
     dispatch(setCurrentUser(updatedProfile));
   };
 

@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { Row, Col, Card, CardImg, CardBody, CardTitle, CardText, Button, FormControl } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
@@ -23,28 +23,30 @@ export default function Dashboard() {
     description: "New Description",
   });
 
-  const fetchCourses = async () => {
+  const fetchCourses = useCallback(async () => {
     try {
       const courses = await client.findMyCourses();
       dispatch(setCourses(courses));
-    } catch (error: any) {
+    } catch (error: unknown) {
       // 401 is expected when user is not signed in
-      if (error.response?.status !== 401) {
+      if (error && typeof error === 'object' && 'response' in error && 
+          typeof error.response === 'object' && error.response && 
+          'status' in error.response && error.response.status !== 401) {
         console.error(error);
       }
       dispatch(setCourses([]));
     }
-  };
+  }, [dispatch]);
 
-  const fetchAllCourses = async () => {
+  const fetchAllCourses = useCallback(async () => {
     try {
       const courses = await client.fetchAllCourses();
       dispatch(setCourses(courses));
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error(error);
       dispatch(setCourses([]));
     }
-  };
+  }, [dispatch]);
 
   const onAddNewCourse = async () => {
     const newCourse = await client.createCourse(course);
@@ -52,12 +54,13 @@ export default function Dashboard() {
   };
 
   const onDeleteCourse = async (courseId: string) => {
-    const status = await client.deleteCourse(courseId);
+    await client.deleteCourse(courseId);
     dispatch(setCourses(courses.filter((course) => course._id !== courseId)));
   };
 
   const onUpdateCourse = async () => {
-    await client.updateCourse(course);
+    if (!course._id) return;
+    await client.updateCourse(course as { _id: string } & Record<string, unknown>);
     dispatch(setCourses(courses.map((c) => {
         if (c._id === course._id) { return course; }
         else { return c; }
@@ -70,7 +73,7 @@ export default function Dashboard() {
     } else {
       fetchCourses();
     }
-  }, [currentUser, showAllCourses]);
+  }, [currentUser, showAllCourses, fetchCourses, fetchAllCourses]);
 
   const displayedCourses = showAllCourses ? courses : courses;
 

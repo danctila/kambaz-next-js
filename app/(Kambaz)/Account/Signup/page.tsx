@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { setCurrentUser } from "../reducer";
 import { useDispatch } from "react-redux";
 import { useState } from "react";
-import * as db from "../../Database";
+import * as client from "../client";
 import { FormControl, Button } from "react-bootstrap";
 import { User } from "../../types";
 
@@ -13,39 +13,14 @@ export default function Signup() {
   const dispatch = useDispatch();
   const router = useRouter();
   
-  const signup = () => {
-    if (!user.username || !user.password) {
-      alert("Username and password are required");
-      return;
+  const signup = async () => {
+    try {
+      const currentUser = await client.signup(user);
+      dispatch(setCurrentUser(currentUser));
+      router.push("/Dashboard");
+    } catch (error: any) {
+      alert(error.response?.data?.message || "Signup failed");
     }
-    
-    // Check if username already exists
-    const existingUser = db.users.find((u: User) => u.username === user.username);
-    if (existingUser) {
-      alert("Username already exists");
-      return;
-    }
-    
-    // Create new user with default values
-    const newUser: User = {
-      _id: new Date().getTime().toString(),
-      username: user.username!,
-      password: user.password!,
-      firstName: user.firstName || "",
-      lastName: user.lastName || "",
-      email: user.email || "",
-      dob: user.dob || "",
-      role: "STUDENT",
-    };
-    
-    // Add to (in-memory) database
-    db.users.push(newUser);
-    
-    // Set as current user
-    dispatch(setCurrentUser(newUser));
-    
-    // Navigate to Dashboard
-    router.push("/Dashboard");
   };
   
   return (

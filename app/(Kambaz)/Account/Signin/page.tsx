@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { setCurrentUser } from "../reducer";
 import { useDispatch } from "react-redux";
 import { useState } from "react";
-import * as db from "../../Database";
+import * as client from "../client";
 import { FormControl, Button } from "react-bootstrap";
 import { User } from "../../types";
 
@@ -12,12 +12,8 @@ export default function Signin() {
   const [credentials, setCredentials] = useState<Partial<User>>({});
   const dispatch = useDispatch();
   const router = useRouter();
-  const signin = () => {
-    const user = db.users.find(
-      (u: User) =>
-        u.username === credentials.username &&
-        u.password === credentials.password
-    );
+  const signin = async () => {
+    const user = await client.signin(credentials);
     if (!user) return;
     dispatch(setCurrentUser(user));
     router.push("/Dashboard");

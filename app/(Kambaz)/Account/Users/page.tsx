@@ -23,7 +23,6 @@ interface User {
 export default function Users() {
   const [users, setUsers] = useState<User[]>([]);
   const [role, setRole] = useState("");
-  const [name, setName] = useState("");
   const { uid } = useParams();
 
   const fetchUsers = async () => {
@@ -42,7 +41,6 @@ export default function Users() {
   };
 
   const filterUsersByName = async (name: string) => {
-    setName(name);
     if (name) {
       const users = await client.findUsersByPartialName(name);
       setUsers(users);

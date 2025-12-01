@@ -10,11 +10,12 @@ import { FaPlus, FaTrash } from "react-icons/fa6";
 import { FaSearch, FaCheckCircle } from "react-icons/fa";
 import { MdEdit } from "react-icons/md";
 import * as client from "./client";
+import { Assignment } from "../../../types";
 
 export default function Assignments() {
   const { cid } = useParams();
   const router = useRouter();
-  const [assignments, setAssignments] = useState<any[]>([]);
+  const [assignments, setAssignments] = useState<Assignment[]>([]);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [assignmentToDelete, setAssignmentToDelete] = useState<string | null>(null);
 

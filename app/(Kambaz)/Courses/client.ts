@@ -1,4 +1,5 @@
 import axios from "axios";
+import { Module } from "../types";
 
 const axiosWithCredentials = axios.create({ withCredentials: true });
 const HTTP_SERVER = process.env.NEXT_PUBLIC_HTTP_SERVER;
@@ -37,7 +38,7 @@ export const deleteModule = async (courseId: string, moduleId: string) => {
   return response.data;
 };
 
-export const updateModule = async (courseId: string, module: any) => {
+export const updateModule = async (courseId: string, module: Module) => {
   const { data } = await axios.put(
     `${COURSES_API}/${courseId}/modules/${module._id}`,
     module

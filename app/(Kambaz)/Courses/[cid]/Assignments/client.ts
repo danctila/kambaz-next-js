@@ -1,4 +1,5 @@
 import axios from "axios";
+import { Assignment } from "../../../types";
 
 const axiosWithCredentials = axios.create({ withCredentials: true });
 const HTTP_SERVER = process.env.NEXT_PUBLIC_HTTP_SERVER;
@@ -10,7 +11,7 @@ export const findAssignmentsForCourse = async (courseId: string) => {
   return response.data;
 };
 
-export const createAssignment = async (courseId: string, assignment: any) => {
+export const createAssignment = async (courseId: string, assignment: Partial<Assignment>) => {
   const response = await axiosWithCredentials.post(
     `${COURSES_API}/${courseId}/assignments`,
     assignment
@@ -18,7 +19,7 @@ export const createAssignment = async (courseId: string, assignment: any) => {
   return response.data;
 };
 
-export const updateAssignment = async (assignment: any) => {
+export const updateAssignment = async (assignment: Partial<Assignment>) => {
   const response = await axiosWithCredentials.put(
     `${ASSIGNMENTS_API}/${assignment._id}`,
     assignment

@@ -79,10 +79,6 @@ export default function Dashboard() {
     fetchCourses();
   };
 
-  const isEnrolled = (courseId: string) => {
-    if (!currentUser) return false;
-    return !showAllCourses;
-  };
 
   useEffect(() => {
     if (showAllCourses) {

@@ -4,11 +4,12 @@ import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { Form, Button, Row, Col } from "react-bootstrap";
 import * as client from "../client";
+import { Assignment } from "../../../../types";
 
 export default function AssignmentEditor() {
   const { cid, aid } = useParams();
   const router = useRouter();
-  const [assignment, setAssignment] = useState<any>({
+  const [assignment, setAssignment] = useState<Partial<Assignment>>({
     title: "",
     description: "",
     points: 100,
@@ -22,7 +23,7 @@ export default function AssignmentEditor() {
     const fetchAssignment = async () => {
       if (aid !== "new" && cid) {
         const assignments = await client.findAssignmentsForCourse(cid as string);
-        const existingAssignment = assignments.find((a: any) => a._id === aid);
+        const existingAssignment = assignments.find((a: Assignment) => a._id === aid);
         if (existingAssignment) {
           setAssignment(existingAssignment);
         }

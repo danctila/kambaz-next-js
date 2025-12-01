@@ -4,10 +4,11 @@ import { useParams } from "next/navigation";
 import { Table } from "react-bootstrap";
 import { FaUserCircle } from "react-icons/fa";
 import * as client from "../../../client";
+import { User } from "../../../../types";
 
 export default function PeopleTable() {
   const { cid } = useParams();
-  const [users, setUsers] = useState<any[]>([]);
+  const [users, setUsers] = useState<User[]>([]);
 
   useEffect(() => {
     const fetchUsers = async () => {

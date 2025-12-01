@@ -6,16 +6,30 @@ import { BsGripVertical } from "react-icons/bs";
 import ModulesControls from "./ModulesControls";
 import LessonControlButtons from "./LessonControlButtons";
 import ModuleControlButtons from "./ModuleControlButtons";
-import { addModule, editModule, updateModule, deleteModule } from "./reducer";
+import { addModule, editModule, updateModule, deleteModule, setModules } from "./reducer";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../../store";
 import { Module, Lesson } from "../../../types";
+import * as client from "../../client";
 
 export default function Modules() {
   const { cid } = useParams();
   const [moduleName, setModuleName] = useState("");
   const { modules } = useSelector((state: RootState) => state.modulesReducer);
   const dispatch = useDispatch();
+
+  const onRemoveModule = async (moduleId: string) => {
+    await client.deleteModule(cid as string, moduleId);
+    dispatch(setModules(modules.filter((m: any) => m._id !== moduleId)));
+  };
+
+  const onUpdateModule = async (module: any) => {
+    await client.updateModule(cid as string, module);
+    const newModules = modules.map((m: any) =>
+      m._id === module._id ? module : m
+    );
+    dispatch(setModules(newModules));
+  };
 
   return (
     <div>
@@ -47,7 +61,7 @@ export default function Modules() {
                     }
                     onKeyDown={(e) => {
                       if (e.key === "Enter") {
-                        dispatch(updateModule({ ...module, editing: false }));
+                        onUpdateModule({ ...module, editing: false });
                       }
                     }}
                     defaultValue={module.name}
@@ -56,7 +70,7 @@ export default function Modules() {
                 <ModuleControlButtons
                   moduleId={module._id}
                   deleteModule={(moduleId) => {
-                    dispatch(deleteModule(moduleId));
+                    onRemoveModule(moduleId);
                   }}
                   editModule={(moduleId) => dispatch(editModule(moduleId))}
                 />

@@ -67,6 +67,23 @@ export default function Dashboard() {
     })));
   };
 
+  const onEnrollInCourse = async (courseId: string) => {
+    if (!currentUser) return;
+    await client.enrollIntoCourse(currentUser._id, courseId);
+    fetchCourses();
+  };
+
+  const onUnenrollFromCourse = async (courseId: string) => {
+    if (!currentUser) return;
+    await client.unenrollFromCourse(currentUser._id, courseId);
+    fetchCourses();
+  };
+
+  const isEnrolled = (courseId: string) => {
+    if (!currentUser) return false;
+    return !showAllCourses;
+  };
+
   useEffect(() => {
     if (showAllCourses) {
       fetchAllCourses();
@@ -142,7 +159,7 @@ export default function Dashboard() {
                         {course.description}
                       </CardText>
                       <Button variant="primary">Go</Button>
-                      {!showAllCourses && (
+                      {!showAllCourses ? (
                         <>
                           <button
                             id="wd-edit-course-click"
@@ -164,7 +181,28 @@ export default function Dashboard() {
                           >
                             Delete
                           </button>
+                          <button
+                            onClick={(event) => {
+                              event.preventDefault();
+                              onUnenrollFromCourse(course._id);
+                            }}
+                            className="btn btn-danger float-end me-2"
+                            id="wd-unenroll-course-click"
+                          >
+                            Unenroll
+                          </button>
                         </>
+                      ) : (
+                        <button
+                          onClick={(event) => {
+                            event.preventDefault();
+                            onEnrollInCourse(course._id);
+                          }}
+                          className="btn btn-success float-end"
+                          id="wd-enroll-course-click"
+                        >
+                          Enroll
+                        </button>
                       )}
                     </CardBody>
                   </Link>

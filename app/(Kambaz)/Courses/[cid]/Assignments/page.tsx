@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button, Form, ListGroup, ListGroupItem, Modal } from "react-bootstrap";
@@ -9,26 +9,34 @@ import { IoEllipsisVertical } from "react-icons/io5";
 import { FaPlus, FaTrash } from "react-icons/fa6";
 import { FaSearch, FaCheckCircle } from "react-icons/fa";
 import { MdEdit } from "react-icons/md";
-import { useSelector, useDispatch } from "react-redux";
-import { deleteAssignment } from "./reducer";
-import { RootState } from "../../../store";
+import * as client from "./client";
 
 export default function Assignments() {
   const { cid } = useParams();
   const router = useRouter();
-  const dispatch = useDispatch();
-  const { assignments } = useSelector((state: RootState) => state.assignmentsReducer);
+  const [assignments, setAssignments] = useState<any[]>([]);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [assignmentToDelete, setAssignmentToDelete] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchAssignments = async () => {
+      if (cid) {
+        const courseAssignments = await client.findAssignmentsForCourse(cid as string);
+        setAssignments(courseAssignments);
+      }
+    };
+    fetchAssignments();
+  }, [cid]);
 
   const handleDeleteClick = (assignmentId: string) => {
     setAssignmentToDelete(assignmentId);
     setShowDeleteDialog(true);
   };
 
-  const confirmDelete = () => {
+  const confirmDelete = async () => {
     if (assignmentToDelete) {
-      dispatch(deleteAssignment(assignmentToDelete));
+      await client.deleteAssignment(assignmentToDelete);
+      setAssignments(assignments.filter(a => a._id !== assignmentToDelete));
     }
     setShowDeleteDialog(false);
     setAssignmentToDelete(null);
@@ -73,9 +81,7 @@ export default function Assignments() {
             </div>
           </div>
           <ListGroup className="rounded-0">
-            {assignments
-              .filter((assignment) => assignment.course === cid)
-              .map((assignment) => (
+            {assignments.map((assignment) => (
                 <ListGroupItem key={assignment._id} className="wd-lesson p-3 ps-1">
                   <div className="d-flex justify-content-between align-items-center">
                     <div className="d-flex align-items-center">
@@ -92,23 +98,23 @@ export default function Assignments() {
                         </Link>
                         <div className="text-muted small">
                           <span className="text-danger">Multiple Modules</span> | <strong>Not available until</strong>{" "}
-                          {new Date(assignment.availableFrom).toLocaleDateString("en-US", {
+                          {assignment.availableFrom && new Date(assignment.availableFrom).toLocaleDateString("en-US", {
                             month: "short",
                             day: "numeric",
                           })}{" "}
-                          at{" "}
-                          {new Date(assignment.availableFrom).toLocaleTimeString("en-US", {
+                          {assignment.availableFrom && "at"}{" "}
+                          {assignment.availableFrom && new Date(assignment.availableFrom).toLocaleTimeString("en-US", {
                             hour: "numeric",
                             minute: "2-digit",
                             hour12: true,
                           })}{" "}
                           | <strong>Due</strong>{" "}
-                          {new Date(assignment.dueDate).toLocaleDateString("en-US", {
+                          {assignment.dueDate && new Date(assignment.dueDate).toLocaleDateString("en-US", {
                             month: "short",
                             day: "numeric",
                           })}{" "}
-                          at{" "}
-                          {new Date(assignment.dueDate).toLocaleTimeString("en-US", {
+                          {assignment.dueDate && "at"}{" "}
+                          {assignment.dueDate && new Date(assignment.dueDate).toLocaleTimeString("en-US", {
                             hour: "numeric",
                             minute: "2-digit",
                             hour12: true,
